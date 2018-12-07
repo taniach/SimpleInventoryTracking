@@ -1,0 +1,61 @@
+﻿@model HomeViewModel
+
+<div class="space"></div>
+
+<h2 id="producttitle">Products</h2>
+
+@if (Model.Products == null || Model.Products.Count == 0)
+{
+    <p>You do not have any products yet</p>
+    <a asp-controller="Product" asp-action="Add" class="btn btn-primary addbtn" role="button">Add Product</a>
+}
+else
+{
+    <div><a asp-controller="Product" asp-action="Add" class="btn btn-warning addbtn" role="button">Add Product</a></div>
+    <br />
+
+    @foreach (var product in Model.Products)
+    {
+        <div class="col-sm-4 col-lg-4 col-md-4">
+            <div class="thumbnail productdisplay">
+                <h4>@product.ProductCode @product.Name</h4>
+
+                @if (@product.Size != null && @product.Size.Trim().Length > 0)
+                {
+                    <h4>Size: @product.Size</h4>
+                }
+
+                    <div class="caption">
+                        <h4 class="pull-right">Stock: <strong> @product.QuantityAvailable </strong></h4>
+                        <p>@product.Price.ToString("c")</p>
+                        <br />
+
+                        <a asp-controller="Product" asp-action="Purchase"
+                           asp-route-productcode="@product.ProductCode"
+                           class="btn btn-primary" role="button">Purchase</a>
+
+                        <a asp-controller="Product" asp-action="Use"
+                           asp-route-productcode="@product.ProductCode"
+                           class="btn btn-primary" role="button">Use</a>
+
+                        <a asp-controller="Transaction" asp-action="TransactionsByProductCode"
+                           asp-route-productcode="@product.ProductCode"
+                           class="btn btn-primary" role="button">Transactions</a>
+                        <div>
+                            <a asp-controller="Product" asp-action="Edit"
+                               asp-route-productcode="@product.ProductCode"
+                               class="btn btn-light btn-sm" role="button">Edit</a>
+
+                            <a asp-controller="Product" asp-action="Delete"
+                               asp-route-productcode="@product.ProductCode"
+                               class="btn btn-light btn-sm" role="button">Delete</a>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+    }
+
+}
+
+

@@ -1,0 +1,36 @@
+﻿@model TransactionViewModel
+
+<h2 class="titles">Transactions</h2>
+
+@if (Model.Transactions == null || Model.Transactions.Count == 0)
+{
+    <p>You do not have any transactions yet</p>
+}
+else
+{
+    <table class="table table-bordered table-responsive table-hover">
+        <tr>
+            <th>Transaction Id </th>
+            <th>Product Code </th>
+            <th>Name </th>
+            <th>Size</th>
+            <th>Date of Transaction </th>
+            <th>Type of Transaction </th>
+            <th>Quantity </th>
+            <th>Description </th>
+        </tr>
+        @foreach (var t in Model.Transactions)
+        {
+        <tr>
+            <td>@t.Id</td>
+            <td>@t.ProductCode</td>
+            <td>@t.Name</td>
+            <td>@t.Size</td>
+            <td>@t.DateOfTransaction.ToString("dd MMMM yyyy")</td>
+            <td>@t.TypeOfTransaction</td>
+            <td>@t.Quantity</td>
+            <td>@t.Description</td>
+        </tr>
+        }
+    </table>
+}

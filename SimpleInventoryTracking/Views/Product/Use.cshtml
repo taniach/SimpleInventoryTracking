@@ -1,0 +1,45 @@
+﻿@model UseViewModel
+
+<form asp-action="Use" method="post" class="form-horizontal" role="form">
+
+    <div asp-validation-summary="All" class="text-danger">@ViewBag.ErrorMessage</div>
+
+    <div class="form-group">
+        <label asp-for="ProductCode" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <input asp-for="ProductCode" class="form-control" value="@Model.ProductCode" readonly />
+            <span asp-validation-for="ProductCode" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Quantity" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <input asp-for="Quantity" class="form-control" />
+            <span asp-validation-for="Quantity" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DateUsed" class="col-md-2 control-label">Date Used</label>
+        <div class="col-md-5">
+            <input asp-for="DateUsed" class="form-control datePicker" type="date"/>
+            <span asp-validation-for="DateUsed" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-5">
+            <input type="submit" class="btn btn-primary" value="Use" />
+        </div>
+    </div>
+
+</form>
