@@ -45,6 +45,14 @@
         </div>
     </div>
 
+    <div class="form-group" hidden>
+        <label asp-for="OwnerID" class="col-md-2 control-label">Owner ID</label>
+        <div class="col-md-5">
+            <input asp-for="OwnerID" class="form-control" value="@Model.OwnerID" readonly />
+            <span asp-validation-for="OwnerID" class="text-danger"></span>
+        </div>
+    </div>
+
     <div class="form-group">
         <div class="col-md-offset-2 col-md-5">
             <input type="submit" class="btn btn-primary" value="Edit Product" />

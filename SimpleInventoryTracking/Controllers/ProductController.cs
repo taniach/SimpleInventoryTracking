@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SimpleInventoryTracking.Models;
 using SimpleInventoryTracking.ViewModels;
+using System.Threading.Tasks;
 
 namespace SimpleInventoryTracking.Controllers
 {
@@ -9,13 +12,19 @@ namespace SimpleInventoryTracking.Controllers
     {
         private readonly IProductRepository _productRepository;
         private readonly ITransactionRepository _transactionRepository;
+        private IAuthorizationService _authorizationService { get; }
+        private UserManager<IdentityUser> _userManager { get; }
 
         public ProductController(
             IProductRepository productRepository,
-            ITransactionRepository transactionRepository)
+            ITransactionRepository transactionRepository,
+            IAuthorizationService authorizationService,
+            UserManager<IdentityUser> userManager)
         {
             _productRepository = productRepository;
             _transactionRepository = transactionRepository;
+            _authorizationService = authorizationService;
+            _userManager = userManager;
         }
 
         public IActionResult Add()
@@ -24,10 +33,22 @@ namespace SimpleInventoryTracking.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(Product product)
+        public async Task<IActionResult> Add(Product product)
         {
             if (ModelState.IsValid)
             {
+                product.OwnerID = _userManager.GetUserId(User);
+
+                var isAuthorized = await _authorizationService.AuthorizeAsync(
+                                                User, product,
+                                                new OperationAuthorizationRequirement
+                                                { Name = "Create" });
+                if (!isAuthorized.Succeeded)
+                {
+                    return new ChallengeResult();
+                }
+
+
                 _productRepository.AddProduct(product);
                 return RedirectToAction("Index", "Home");
             }
@@ -41,6 +62,9 @@ namespace SimpleInventoryTracking.Controllers
 
         public IActionResult Delete(string productCode)
         {
+            var product = _productRepository.GetProductByProductCode(
+                productCode, _userManager.GetUserId(User));
+
             _productRepository.DeleteProduct(productCode);
             return RedirectToAction("Index", "Home");
         }
@@ -53,12 +77,21 @@ namespace SimpleInventoryTracking.Controllers
         }
 
         [HttpPost]
-        public IActionResult Purchase(PurchaseViewModel purchaseViewModel)
+        public async Task<IActionResult> Purchase(PurchaseViewModel purchaseViewModel)
         {
             if (ModelState.IsValid)
             {
                 var product = _productRepository.GetProductByProductCode(
-                    purchaseViewModel.ProductCode);
+                    purchaseViewModel.ProductCode, _userManager.GetUserId(User));
+
+                var isAuthorized = await _authorizationService.AuthorizeAsync(
+                                                User, product,
+                                                new OperationAuthorizationRequirement
+                                                { Name = "Update" });
+                if (!isAuthorized.Succeeded)
+                {
+                    return new ChallengeResult();
+                }
 
                 product.Purchase(purchaseViewModel.Quantity);
                 _productRepository.UpdateProduct(product);
@@ -70,7 +103,8 @@ namespace SimpleInventoryTracking.Controllers
                     DateOfTransaction = purchaseViewModel.DatePurchased,
                     TypeOfTransaction = "Purchase",
                     Quantity = purchaseViewModel.Quantity,
-                    Description = purchaseViewModel.Description
+                    Description = purchaseViewModel.Description,
+                    OwnerID = _userManager.GetUserId(User)
                 });
 
                 return RedirectToAction("Index", "Home");
@@ -86,15 +120,24 @@ namespace SimpleInventoryTracking.Controllers
         }
 
         [HttpPost]
-        public IActionResult Use(UseViewModel useViewModel)
+        public async Task<IActionResult> Use(UseViewModel useViewModel)
         {
             if (ModelState.IsValid)
             {
                 var product = _productRepository.GetProductByProductCode(
-                    useViewModel.ProductCode);
+                    useViewModel.ProductCode, _userManager.GetUserId(User));
 
                 if (product.Use(useViewModel.Quantity))
                 {
+                    var isAuthorized = await _authorizationService.AuthorizeAsync(
+                                                User, product,
+                                                new OperationAuthorizationRequirement
+                                                { Name = "Update" });
+                    if (!isAuthorized.Succeeded)
+                    {
+                        return new ChallengeResult();
+                    }
+
                     _productRepository.UpdateProduct(product);
 
                     _transactionRepository.AddTransaction(new Transaction()
@@ -105,7 +148,8 @@ namespace SimpleInventoryTracking.Controllers
                         DateOfTransaction = useViewModel.DateUsed,
                         TypeOfTransaction = "Use",
                         Quantity = useViewModel.Quantity,
-                        Description = useViewModel.Description
+                        Description = useViewModel.Description,
+                        OwnerID = _userManager.GetUserId(User)
                     });
 
                     return RedirectToAction("Index", "Home");
@@ -120,7 +164,8 @@ namespace SimpleInventoryTracking.Controllers
 
         public IActionResult Edit(string productCode)
         {
-            var product = _productRepository.GetProductByProductCode(productCode);
+            var product = _productRepository.GetProductByProductCode(
+                productCode, _userManager.GetUserId(User));
             return View(product);
         }
 

@@ -10,6 +10,7 @@ namespace SimpleInventoryTracking.Models
         public string Size { get; set; }
         public decimal Price { get; set; }
         public int QuantityAvailable { get; set; }
+        public string OwnerID { get; set; }
 
         public void Purchase(int quantityPurchased)
         {

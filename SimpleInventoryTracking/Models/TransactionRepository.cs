@@ -24,19 +24,17 @@ namespace SimpleInventoryTracking.Models
             _appDbContext.SaveChanges();
         }
 
-        public Transaction FindTransaction(int id)
+        public IEnumerable<Transaction> GetAllTransactions(string ownerId)
         {
-            return _appDbContext.Transactions.FirstOrDefault(t => t.Id == id);
+            return _appDbContext.Transactions.Where(t => t.OwnerID.Equals(ownerId));
         }
 
-        public IEnumerable<Transaction> GetAllTransactions()
+        public IEnumerable<Transaction> GetTransactionsByProductCode(
+            string productCode,
+            string ownerId)
         {
-            return _appDbContext.Transactions;
-        }
-
-        public IEnumerable<Transaction> GetTransactionsByProductCode(string productCode)
-        {
-            return _appDbContext.Transactions.Where(t => t.ProductCode.Equals(productCode));
+            return _appDbContext.Transactions.Where
+                (t => t.ProductCode.Equals(productCode) && t.OwnerID.Equals(ownerId));
         }
 
         public void UpdateTransaction(Transaction transaction)

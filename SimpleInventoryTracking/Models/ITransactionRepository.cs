@@ -4,9 +4,7 @@ namespace SimpleInventoryTracking.Models
 {
     public interface ITransactionRepository
     {
-        IEnumerable<Transaction> GetAllTransactions();
-
-        Transaction FindTransaction(int id);
+        IEnumerable<Transaction> GetAllTransactions(string ownerId);
 
         void AddTransaction(Transaction transaction);
 
@@ -14,6 +12,7 @@ namespace SimpleInventoryTracking.Models
 
         void DeleteTransaction(int id);
 
-        IEnumerable<Transaction> GetTransactionsByProductCode(string productCode);
+        IEnumerable<Transaction> GetTransactionsByProductCode(
+            string productCode, string ownerId);
     }
 }

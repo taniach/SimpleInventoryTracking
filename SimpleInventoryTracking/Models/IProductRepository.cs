@@ -4,9 +4,9 @@ namespace SimpleInventoryTracking.Models
 {
     public interface IProductRepository
     {
-        IEnumerable<Product> GetAllProducts();
+        IEnumerable<Product> GetAllProducts(string ownerId);
 
-        Product GetProductByProductCode(string productCode);
+        Product GetProductByProductCode(string productCode, string ownerId);
 
         void AddProduct(Product product);
 

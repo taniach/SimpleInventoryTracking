@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SimpleInventoryTracking.Authorization;
 
 namespace SimpleInventoryTracking
 {
@@ -37,7 +41,20 @@ namespace SimpleInventoryTracking
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<ITransactionRepository, TransactionRepository>();
 
-            services.AddMvc();
+            services.AddMvc(config =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                                 .RequireAuthenticatedUser()
+                                 .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            // Authorization handlers.
+            services.AddScoped<IAuthorizationHandler,
+                                  ProductIsOwnerAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler,
+                                  TransactionIsOwnerAuthorizationHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -24,14 +24,15 @@ namespace SimpleInventoryTracking.Models
             _appDbContext.SaveChanges();
         }
 
-        public IEnumerable<Product> GetAllProducts()
+        public IEnumerable<Product> GetAllProducts(string ownerId)
         {
-            return _appDbContext.Products;
+            return _appDbContext.Products.Where(p => p.OwnerID.Equals(ownerId));
         }
 
-        public Product GetProductByProductCode(string productCode)
+        public Product GetProductByProductCode(string productCode, string ownerId)
         {
-            return _appDbContext.Products.FirstOrDefault(p => p.ProductCode.Equals(productCode));
+            return _appDbContext.Products.FirstOrDefault
+                (p => p.ProductCode.Equals(productCode) && p.OwnerID.Equals(ownerId));
         }
 
         public void UpdateProduct(Product product)
