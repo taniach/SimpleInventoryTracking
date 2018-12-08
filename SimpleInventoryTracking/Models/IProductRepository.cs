@@ -6,12 +6,12 @@ namespace SimpleInventoryTracking.Models
     {
         IEnumerable<Product> GetAllProducts(string ownerId);
 
-        Product GetProductByProductCode(string productCode, string ownerId);
+        Product GetProductByProductCode(int id, string ownerId);
 
         void AddProduct(Product product);
 
         void UpdateProduct(Product product);
 
-        void DeleteProduct(string productCode);
+        void DeleteProduct(int id);
     }
 }

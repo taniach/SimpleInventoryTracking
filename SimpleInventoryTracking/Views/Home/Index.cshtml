@@ -6,7 +6,7 @@
 
 @if (Model.Products == null || Model.Products.Count == 0)
 {
-    <p>You do not have any products yet</p>
+    <p id="noproducts">You do not have any products yet</p>
     <a asp-controller="Product" asp-action="Add" class="btn btn-primary addbtn" role="button">Add Product</a>
 }
 else
@@ -31,23 +31,23 @@ else
                         <br />
 
                         <a asp-controller="Product" asp-action="Purchase"
-                           asp-route-productcode="@product.ProductCode"
+                           asp-route-id="@product.Id"
                            class="btn btn-primary" role="button">Purchase</a>
 
                         <a asp-controller="Product" asp-action="Use"
-                           asp-route-productcode="@product.ProductCode"
+                           asp-route-id="@product.Id"
                            class="btn btn-primary" role="button">Use</a>
 
                         <a asp-controller="Transaction" asp-action="TransactionsByProductCode"
-                           asp-route-productcode="@product.ProductCode"
+                           asp-route-id="@product.Id"
                            class="btn btn-primary" role="button">Transactions</a>
                         <div>
                             <a asp-controller="Product" asp-action="Edit"
-                               asp-route-productcode="@product.ProductCode"
+                               asp-route-id="@product.Id"
                                class="btn btn-light btn-sm" role="button">Edit</a>
 
                             <a asp-controller="Product" asp-action="Delete"
-                               asp-route-productcode="@product.ProductCode"
+                               asp-route-id="@product.Id"
                                class="btn btn-light btn-sm" role="button">Delete</a>
                         </div>
                     </div>

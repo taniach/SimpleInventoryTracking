@@ -13,6 +13,6 @@ namespace SimpleInventoryTracking.Models
         void DeleteTransaction(int id);
 
         IEnumerable<Transaction> GetTransactionsByProductCode(
-            string productCode, string ownerId);
+            int id, string ownerId);
     }
 }

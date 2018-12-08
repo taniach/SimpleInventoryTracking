@@ -55,24 +55,28 @@ namespace SimpleInventoryTracking.Controllers
             return View(product);
         }
 
-        public IActionResult AddProductComplete()
-        {
-            return View();
-        }
-
-        public IActionResult Delete(string productCode)
+        public IActionResult Delete(int id)
         {
             var product = _productRepository.GetProductByProductCode(
-                productCode, _userManager.GetUserId(User));
+                id, _userManager.GetUserId(User));
 
-            _productRepository.DeleteProduct(productCode);
+            _productRepository.DeleteProduct(id);
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Purchase(string productCode)
+        public IActionResult Purchase(int id)
         {
-            PurchaseViewModel purchaseViewModel = new PurchaseViewModel();
-            purchaseViewModel.ProductCode = productCode;
+            var product = _productRepository.GetProductByProductCode(
+                id, _userManager.GetUserId(User));
+
+            PurchaseViewModel purchaseViewModel = new PurchaseViewModel()
+            {
+                Id = id,
+                ProductCode = product.ProductCode,
+                Name = product.Name,
+                Size = product.Size
+            };
+
             return View(purchaseViewModel);
         }
 
@@ -82,7 +86,7 @@ namespace SimpleInventoryTracking.Controllers
             if (ModelState.IsValid)
             {
                 var product = _productRepository.GetProductByProductCode(
-                    purchaseViewModel.ProductCode, _userManager.GetUserId(User));
+                    purchaseViewModel.Id, _userManager.GetUserId(User));
 
                 var isAuthorized = await _authorizationService.AuthorizeAsync(
                                                 User, product,
@@ -97,6 +101,7 @@ namespace SimpleInventoryTracking.Controllers
                 _productRepository.UpdateProduct(product);
 
                 _transactionRepository.AddTransaction(new Transaction() {
+                    ProductId = product.Id,
                     ProductCode = product.ProductCode,
                     Name = product.Name,
                     Size = product.Size,
@@ -112,10 +117,19 @@ namespace SimpleInventoryTracking.Controllers
             return View(purchaseViewModel);
         }
 
-        public IActionResult Use(string productCode)
+        public IActionResult Use(int id)
         {
-            UseViewModel useViewModel = new UseViewModel();
-            useViewModel.ProductCode = productCode;
+            var product = _productRepository.GetProductByProductCode(
+                id, _userManager.GetUserId(User));
+
+            UseViewModel useViewModel = new UseViewModel()
+            {
+                Id = id,
+                ProductCode = product.ProductCode,
+                Name = product.Name,
+                Size = product.Size
+            };
+
             return View(useViewModel);
         }
 
@@ -125,7 +139,7 @@ namespace SimpleInventoryTracking.Controllers
             if (ModelState.IsValid)
             {
                 var product = _productRepository.GetProductByProductCode(
-                    useViewModel.ProductCode, _userManager.GetUserId(User));
+                    useViewModel.Id, _userManager.GetUserId(User));
 
                 if (product.Use(useViewModel.Quantity))
                 {
@@ -142,6 +156,7 @@ namespace SimpleInventoryTracking.Controllers
 
                     _transactionRepository.AddTransaction(new Transaction()
                     {
+                        ProductId = product.Id,
                         ProductCode = product.ProductCode,
                         Name = product.Name,
                         Size = product.Size,
@@ -162,10 +177,10 @@ namespace SimpleInventoryTracking.Controllers
             return View(useViewModel);
         }
 
-        public IActionResult Edit(string productCode)
+        public IActionResult Edit(int id)
         {
             var product = _productRepository.GetProductByProductCode(
-                productCode, _userManager.GetUserId(User));
+                id, _userManager.GetUserId(User));
             return View(product);
         }
 

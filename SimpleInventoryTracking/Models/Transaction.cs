@@ -7,6 +7,7 @@ namespace SimpleInventoryTracking.Models
     {
         [Key]
         public int Id { get; set; }
+        public int ProductId { get; set; }
         public string ProductCode { get; set; }
         public string Name { get; set; }
         public string Size { get; set; }

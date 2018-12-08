@@ -39,10 +39,10 @@ namespace SimpleInventoryTracking.Controllers
             return View(transactionViewModel);
         }
 
-        public IActionResult TransactionsByProductCode(string productCode)
+        public IActionResult TransactionsByProductCode(int id)
         {
             var transactions = _transactionRepository.GetTransactionsByProductCode(
-                productCode, _userManager.GetUserId(User))
+                id, _userManager.GetUserId(User))
                 .OrderByDescending(t => t.DateOfTransaction);
 
             var transactionViewModel = new TransactionViewModel()

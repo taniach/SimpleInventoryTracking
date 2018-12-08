@@ -18,9 +18,9 @@ namespace SimpleInventoryTracking.Models
             _appDbContext.SaveChanges();
         }
 
-        public void DeleteProduct(string productCode)
+        public void DeleteProduct(int id)
         {
-            _appDbContext.Products.Remove(_appDbContext.Products.Find(productCode));
+            _appDbContext.Products.Remove(_appDbContext.Products.Find(id));
             _appDbContext.SaveChanges();
         }
 
@@ -29,10 +29,10 @@ namespace SimpleInventoryTracking.Models
             return _appDbContext.Products.Where(p => p.OwnerID.Equals(ownerId));
         }
 
-        public Product GetProductByProductCode(string productCode, string ownerId)
+        public Product GetProductByProductCode(int id, string ownerId)
         {
             return _appDbContext.Products.FirstOrDefault
-                (p => p.ProductCode.Equals(productCode) && p.OwnerID.Equals(ownerId));
+                (p => p.Id == id && p.OwnerID.Equals(ownerId));
         }
 
         public void UpdateProduct(Product product)

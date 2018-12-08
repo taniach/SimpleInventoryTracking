@@ -30,11 +30,11 @@ namespace SimpleInventoryTracking.Models
         }
 
         public IEnumerable<Transaction> GetTransactionsByProductCode(
-            string productCode,
+            int id,
             string ownerId)
         {
             return _appDbContext.Transactions.Where
-                (t => t.ProductCode.Equals(productCode) && t.OwnerID.Equals(ownerId));
+                (t => t.ProductId == id && t.OwnerID.Equals(ownerId));
         }
 
         public void UpdateTransaction(Transaction transaction)
