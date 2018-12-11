@@ -22,7 +22,8 @@ else
         @foreach (var t in Model.Transactions)
         {
         <tr>
-            <td>@t.Id</td>
+            <td>@t.Id <a asp-controller="Transaction" asp-action="Delete"
+   asp-route-id="@t.Id" class="btn btn-light btn-sm" role="button">Delete</a></td>
             <td>@t.ProductCode</td>
             <td>@t.Name</td>
             <td>@t.Size</td>

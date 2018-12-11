@@ -52,5 +52,14 @@ namespace SimpleInventoryTracking.Controllers
 
             return View(transactionViewModel);
         }
+
+        public IActionResult Delete(int id)
+        {
+            var transaction = _transactionRepository.GetTransactionsByProductCode(
+                id, _userManager.GetUserId(User));
+
+            _transactionRepository.DeleteTransaction(id);
+            return RedirectToAction("Index", "Transaction");
+        }
     }
 }
