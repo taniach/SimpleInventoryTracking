@@ -26,14 +26,14 @@ namespace SimpleInventoryTracking
         public void ConfigureServices(IServiceCollection services)
         {
             //Local:
-            services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<AppDbContext>(options =>
+            //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             //Deploy:
-            //var sqlConnectionString = Configuration.GetConnectionString("DefaultConnection");
+            var sqlConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
-            //services.AddDbContext<AppDbContext>(options =>
-            //options.UseMySQL(sqlConnectionString));
+            services.AddDbContext<AppDbContext>(options =>
+            options.UseMySQL(sqlConnectionString));
 
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
