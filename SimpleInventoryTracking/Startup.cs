@@ -33,7 +33,7 @@ namespace SimpleInventoryTracking
             var sqlConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<AppDbContext>(options =>
-            options.UseMySQL(sqlConnectionString));
+            options.UseMySql(sqlConnectionString));
 
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
